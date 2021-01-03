@@ -18,23 +18,23 @@ Adafruit_SGP30 sgp;
 
 Ink_Sprite InkPageSprite(&M5.M5Ink);
 
-void DrawCo2(int ppm, char* str)
+void DrawCo2(int ppm)
 {
   char ppm_str[8];
   sprintf(ppm_str, "%5d", ppm);
 //  InkPageSprite.clear();
   InkPageSprite.drawString(10, 39, ppm_str, &AsciiFont24x48);
-  InkPageSprite.drawString(130, 39, str, &AsciiFont24x48);
+  InkPageSprite.drawString(130, 39, "ppm", &AsciiFont24x48);
   InkPageSprite.pushSprite();
 }
 
-void DrawTVOC(int ppm, char* str)
+void DrawTVOC(int ppm)
 {
   char ppm_str[8];
   sprintf(ppm_str, "%5d", ppm);
 //  InkPageSprite.clear();
   InkPageSprite.drawString(10, 85, ppm_str, &AsciiFont24x48);
-  InkPageSprite.drawString(130, 85, str, &AsciiFont24x48);
+  InkPageSprite.drawString(130, 85, "ppb", &AsciiFont24x48);
   InkPageSprite.pushSprite();
 }
 
@@ -115,8 +115,8 @@ void loop() {
   co2_average = co2_average / sensor_interval_cnt;
   tvoc_average = tvoc_average / sensor_interval_cnt;
 
-  DrawCo2(co2_average, "ppm");
-  DrawTVOC(tvoc_average, "ppb");
+  DrawCo2(co2_average);
+  DrawTVOC(tvoc_average);
   DrawDate();
   /*    if( M5.BtnUP.wasPressed()) ButtonTest("Btn UP Pressed");
       // if( M5.BtnDOWN.wasPressed()) ButtonTest("Btn DOWN Pressed");
@@ -131,4 +131,3 @@ void loop() {
   */
   M5.update();
 }
-
