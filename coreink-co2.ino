@@ -28,12 +28,12 @@ void DrawCo2(int ppm)
   InkPageSprite.pushSprite();
 }
 
-void DrawTVOC(int ppm)
+void DrawTVOC(int ppb)
 {
-  char ppm_str[8];
-  sprintf(ppm_str, "%5d", ppm);
+  char ppb_str[8];
+  sprintf(ppb_str, "%5d", ppb);
 //  InkPageSprite.clear();
-  InkPageSprite.drawString(10, 85, ppm_str, &AsciiFont24x48);
+  InkPageSprite.drawString(10, 85, ppb_str, &AsciiFont24x48);
   InkPageSprite.drawString(130, 85, "ppb", &AsciiFont24x48);
   InkPageSprite.pushSprite();
 }
