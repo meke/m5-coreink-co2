@@ -22,20 +22,16 @@ void DrawCo2(int ppm)
 {
   char ppm_str[8];
   sprintf(ppm_str, "%5d", ppm);
-//  InkPageSprite.clear();
   InkPageSprite.drawString(10, 39, ppm_str, &AsciiFont24x48);
   InkPageSprite.drawString(130, 39, "ppm", &AsciiFont24x48);
-  InkPageSprite.pushSprite();
 }
 
 void DrawTVOC(int ppb)
 {
   char ppb_str[8];
   sprintf(ppb_str, "%5d", ppb);
-//  InkPageSprite.clear();
   InkPageSprite.drawString(10, 85, ppb_str, &AsciiFont24x48);
   InkPageSprite.drawString(130, 85, "ppb", &AsciiFont24x48);
-  InkPageSprite.pushSprite();
 }
 
 void DrawDate()
@@ -54,12 +50,35 @@ void DrawDate()
   sprintf(date_str, "%0d/%0d/%0d %02d:%02d:%02d", YY, MM, dd, hh, mm, ss);
 
   InkPageSprite.drawString(20, 180, date_str);
-  InkPageSprite.pushSprite();
 }
 
 void DrawBootMsg()
 {
-  InkPageSprite.drawString(20, 180, "booting and setup...");
+  InkPageSprite.drawString(20, 20, "booting and setup...");
+  InkPageSprite.pushSprite();
+}
+
+void DrawSensorInit()
+{
+  InkPageSprite.drawString(20, 80, "Sensor initialise...");
+  InkPageSprite.pushSprite();
+}
+
+void DrawSensorOK()
+{
+  InkPageSprite.drawString(20, 100, "OK");
+  InkPageSprite.pushSprite();
+}
+
+void DrawWifiConnect()
+{
+  InkPageSprite.drawString(20, 140, "Wifi setting...");
+  InkPageSprite.pushSprite();
+}
+
+void DrawWifiConnectOK()
+{
+  InkPageSprite.drawString(20, 160, "OK");
   InkPageSprite.pushSprite();
 }
 
@@ -80,19 +99,24 @@ void setup() {
     Serial.printf("Ink Sprite creat faild");
   }
   DrawBootMsg();
+
   
+  DrawSensorInit();
   Serial.begin(115200);
   Serial.println("SGP30 test");
   if (! sgp.begin()) {
     Serial.println("Sensor not found :(");
     while (1);
   }
+  DrawSensorOK();
 
+  DrawWifiConnect();
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.printf(".");
   }
+  DrawWifiConnectOK();
 
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
 
@@ -102,6 +126,7 @@ void loop() {
 
   co2_average=0;
   tvoc_average=0;
+  InkPageSprite.clear();
   for (int i = 0; i < sensor_interval_cnt; i++) {
     if (! sgp.IAQmeasure()) {
       Serial.println("Measurement failed");
@@ -109,6 +134,9 @@ void loop() {
     }
     co2_average += sgp.eCO2;
     tvoc_average += sgp.TVOC;
+
+    if( M5.BtnMID.wasPressed()) {InkPageSprite.clear();}
+    
     delay(sensor_interval_time*1000);
   }
   
@@ -118,6 +146,8 @@ void loop() {
   DrawCo2(co2_average);
   DrawTVOC(tvoc_average);
   DrawDate();
+  InkPageSprite.pushSprite();
+
   /*    if( M5.BtnUP.wasPressed()) ButtonTest("Btn UP Pressed");
       // if( M5.BtnDOWN.wasPressed()) ButtonTest("Btn DOWN Pressed");
       if( M5.BtnDOWN.wasPressed()){
